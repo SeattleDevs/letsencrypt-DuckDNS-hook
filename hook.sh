@@ -15,7 +15,7 @@ fi
 deploy_challenge() {
   local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
   echo -n " - Setting TXT record with DuckDNS ${TOKEN_VALUE}"
-  curl -X PUT https://www.duckdns.org/update?domains=${DOMAIN}&token=${DUCKDNS_TOKEN}&txt=${TOKEN_VALUE}
+  curl "https://www.duckdns.org/update?domains=${DOMAIN}&token=${DUCKDNS_TOKEN}&txt=${TOKEN_VALUE}"
   echo
   echo " - Waiting 30 seconds for DNS to propagate."
   sleep 30
@@ -24,12 +24,13 @@ deploy_challenge() {
 clean_challenge() {
   local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"
   echo -n " - Removing TXT record from DuckDNS ${DOMAIN}"
-  curl -X PUT https://www.duckdns.org/update?domains=${DOMAIN}&token=${DUCKDNS_TOKEN}&txt=removed&clear=true
+  curl "https://www.duckdns.org/update?domains=${DOMAIN}&token=${DUCKDNS_TOKEN}&txt=removed&clear=true"
   echo
 }
 
 deploy_cert() {
-  cp "${KEYFILE}" "${FULLCHAINFILE}" /etc/nginx/ssl/; chown -R nginx: /etc/nginx/ssl
+  local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}"
+  cp "${KEYFILE}" "${FULLCHAINFILE}" /etc/nginx/ssl/; chown -R root: /etc/nginx/ssl
   systemctl reload nginx
 }
 
