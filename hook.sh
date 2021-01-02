@@ -30,8 +30,10 @@ clean_challenge() {
 
 deploy_cert() {
   local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}"
-  cp "${KEYFILE}" "${FULLCHAINFILE}" /etc/nginx/ssl/; chown -R root: /etc/nginx/ssl
-  systemctl reload nginx
+  if [[ -d /etc/nginx/ssl/ ]]; then
+    cp "${KEYFILE}" "${FULLCHAINFILE}" /etc/nginx/ssl/; chown -R root: /etc/nginx/ssl
+    systemctl reload nginx
+  fi
 }
 
 unchanged_cert() {
